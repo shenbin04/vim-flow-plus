@@ -4,9 +4,12 @@ endif
 
 let g:loaded_flow_plus = 1
 let g:flow#flowpath = 'flow'
-let g:flow#flags = ' --from vim --json --no-auto-start --strip-root'
+let g:flow#flags = ' --from vim --json --no-auto-start'
 
 function! s:FlowCoverageHide()
+  if !exists('b:flow_highlights_drawn') || !b:flow_highlights_drawn
+    return
+  endif
   for match in getmatches()
     if stridx(match['group'], 'FlowCoverage') == 0
       call matchdelete(match['id'])
@@ -82,7 +85,7 @@ endfunction
 
 function! s:ToggleHighlight()
   if !exists('b:flow_highlights_drawn')
-    return
+    let b:flow_highlights_drawn = 0
   endif
   if b:flow_highlights_drawn && b:flow_coverage_highlight_enabled
     let b:flow_coverage_highlight_enabled = 0
@@ -214,4 +217,3 @@ command! FlowGetDef call s:GetDefAtPos()
 highlight link FlowCoverage SpellCap
 
 au BufLeave *.js call s:FlowCoverageHide()
-au BufWritePost,BufReadPost,BufEnter *.js call s:FlowCoverageRefresh()
