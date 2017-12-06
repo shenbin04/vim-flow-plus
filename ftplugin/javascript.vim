@@ -24,10 +24,6 @@ function! GetLine(line)
 endfunction
 
 function! s:FlowCoverageRefresh()
-  if !exists('b:flow_coverage_highlight_enabled')
-    let b:flow_coverage_highlight_enabled = 1
-  endif
-
   let command = g:flow#flowpath . ' coverage ' . g:flow#flags
   let result = system(command, getline(1, '$'))
 
@@ -44,17 +40,10 @@ function! s:FlowCoverageRefresh()
 
   let b:flow_coverage_status = printf('%.2f%% (%d/%d)', percent, covered, total)
   let b:flow_coverage_uncovered_locs = get(expressions, 'uncovered_locs')
-
-  if b:flow_coverage_highlight_enabled
-    call s:FlowCoverageShowHighlights()
-  endif
 endfunction
 
 function! s:FlowCoverageShowHighlights()
-  if !exists('b:flow_coverage_uncovered_locs')
-    call s:FlowCoverageRefresh()
-  endif
-
+  call s:FlowCoverageRefresh()
   call s:FlowCoverageHide()
 
   for line in b:flow_coverage_uncovered_locs
@@ -216,4 +205,7 @@ command! FlowGetDef call s:GetDefAtPos()
 
 highlight link FlowCoverage SpellCap
 
-au BufLeave *.js call s:FlowCoverageHide()
+augroup vimflowplus
+  autocmd!
+  au BufLeave *.js,*.jsx call s:FlowCoverageHide()
+augroup END

@@ -63,3 +63,7 @@ Displays the type of the variable under the cursor.
 ### `FlowGetDef`
 
 Go to the definition of the variable under the cursor.
+
+## TODO
+* Asynchronous coverage refresh
+* Timeout on flow commands
