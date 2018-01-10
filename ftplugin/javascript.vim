@@ -178,8 +178,8 @@ endfunction
 
 function! s:GetDefAtPos()
   let pos = line('.') . ' ' . col('.')
-  let command = g:flow#flowpath . ' get-def ' . pos . g:flow#flags
-  let result = system(command, getline(1, '$'))
+  let command = g:flow#flowpath . ' get-def ' . expand('%') . ' ' . pos . g:flow#flags
+  let result = system(command)
 
   if v:shell_error > 0 || empty(result)
     return
