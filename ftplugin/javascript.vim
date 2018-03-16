@@ -176,7 +176,7 @@ function! s:TypeAtPos()
   echo json_result['type']
 endfunction
 
-function! s:GetDefAtPos()
+function! s:GetDefAtPos(newtab)
   let pos = line('.') . ' ' . col('.')
   let command = g:flow#flowpath . ' get-def ' . expand('%') . ' ' . pos . g:flow#flags
   let result = system(command)
@@ -192,6 +192,9 @@ function! s:GetDefAtPos()
   elseif path =~ '-$'
     call cursor(def['line'], def['start'])
   elseif filereadable(path)
+    if (a:newtab)
+      tabnew
+    endif
     execute 'edit' path
     call cursor(def['line'], def['start'])
   endif
@@ -201,7 +204,8 @@ command! FlowCoverageToggle call s:ToggleHighlight()
 command! FlowNextRef call s:NextRef(1)
 command! FlowPrevRef call s:NextRef(-1)
 command! FlowTypeAtPos call s:TypeAtPos()
-command! FlowGetDef call s:GetDefAtPos()
+command! FlowGetDef call s:GetDefAtPos(0)
+command! FlowGetDefTab call s:GetDefAtPos(1)
 
 highlight link FlowCoverage SpellCap
 
