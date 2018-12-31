@@ -2,9 +2,11 @@ if exists('g:loaded_flow_plus')
   finish
 endif
 
-let g:loaded_flow_plus = 1
-let g:flow#flowpath = 'flow'
+if !exists('g:flow#flowpath')
+  let g:flow#flowpath = 'flow'
+endif
 let g:flow#flags = ' --from vim --json --no-auto-start'
+let g:loaded_flow_plus = 1
 
 function! s:FlowCoverageHide()
   if !exists('b:flow_highlights_drawn') || !b:flow_highlights_drawn
